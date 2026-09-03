@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "notif_1788437629480_ccw4k6",
+    "appName": "Banco Galicia",
+    "packageName": "com.mosync.app_Banco_Galicia",
+    "title": "¡Recibiste plata! 💰🤑",
+    "text": "Erica Natalia Diaz te envió: $1.000",
+    "bigText": "Erica Natalia Diaz te envió: $1.000",
+    "subText": "",
+    "receivedAt": "2026-09-03T12:13:49.480Z",
+    "postTime": 1788437627528,
+    "status": "new",
+    "attendedAt": null
+  }
+]

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notificaciones de Entregas & Mercadería - Tienda</title>
+  <title>StoreNotify - Sistema de Notificaciones &amp; Turnos</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,74 +11,257 @@
 </head>
 <body>
 
-  <!-- Header Superior -->
-  <header>
-    <div class="brand">
-      <div class="brand-icon">📦</div>
-      <div class="brand-info">
-        <h1>Centro de Notificaciones de Tienda</h1>
-        <p>Recepción en tiempo real desde el celular en casa</p>
+  <!-- VISTA 1: INICIO DE SESIÓN -->
+  <div id="authView" class="auth-container">
+    <div class="login-card">
+      <div class="login-logo">📦</div>
+      <h2 style="font-size: 1.4rem; margin-bottom: 0.25rem;">StoreNotify</h2>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        Control de Entregas &amp; Turnos en Tiempo Real
+      </p>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="inputUsername">Usuario</label>
+          <input type="text" id="inputUsername" class="form-control" placeholder="Ej: admin o nombre de empleado" required autofocus>
+        </div>
+
+        <div class="form-group">
+          <label for="inputPassword">Contraseña</label>
+          <input type="password" id="inputPassword" class="form-control" placeholder="Ingresa tu contraseña" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem;">
+          🔑 Iniciar Sesión / Abrir Turno
+        </button>
+      </form>
+
+      <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--card-border); font-size: 0.75rem; color: var(--text-muted);">
+        Administrador inicial: <code style="color: #38bdf8;">admin</code> | Clave: <code style="color: #38bdf8;">admin123</code>
       </div>
-    </div>
-
-    <div class="header-status-group">
-      <div class="status-badge">
-        <span class="status-dot" id="statusDot"></span>
-        <span id="statusLabel">Conectando...</span>
-      </div>
-
-      <button class="btn btn-primary" id="soundToggleBtn" onclick="toggleSound()">
-        🔊 Sonido Activado
-      </button>
-
-      <button class="btn btn-secondary" onclick="requestDesktopPermissions()" title="Activar avisos flotantes de Chrome">
-        🖥️ Alertas de Pantalla
-      </button>
-
-      <button class="btn btn-secondary" onclick="openApkModal()">
-        📱 Conectar Celular
-      </button>
-    </div>
-  </header>
-
-  <!-- Barra de Herramientas y Filtros -->
-  <div class="toolbar">
-    <div class="search-box">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="Buscar por guía, pedido, proveedor o texto...">
-    </div>
-
-    <div class="filter-tags">
-      <button class="filter-pill active" data-filter="all">Todas</button>
-      <button class="filter-pill" data-filter="delivery">🛵 Entregas & Repartos</button>
-      <button class="filter-pill" data-filter="chat">💬 WhatsApp & Proveedores</button>
-      <button class="filter-pill" data-filter="MercadoLibre">MercadoLibre</button>
-      <button class="filter-pill" data-filter="Rappi">Rappi</button>
-    </div>
-
-    <div style="display: flex; gap: 0.5rem;">
-      <button class="btn btn-secondary" onclick="simulateDelivery()" style="font-size: 0.8rem;">
-        ⚡ Probar Alerta
-      </button>
-      <button class="btn btn-outline-danger" onclick="clearAll()" style="font-size: 0.8rem;">
-        🗑️ Limpiar
-      </button>
     </div>
   </div>
 
-  <!-- Contenedor Principal de Notificaciones -->
-  <main>
-    <div class="section-header">
-      <h2>Avisos Recibidos</h2>
-      <span style="font-size: 0.85rem; color: var(--text-muted);" id="notifCount">0 notificaciones</span>
+  <!-- VISTA 2: APLICACIÓN PRINCIPAL (USUARIO O ADMINISTRADOR) -->
+  <div id="appView" style="display: none; flex-direction: column; min-height: 100vh;">
+    
+    <!-- Header Superior -->
+    <header>
+      <div class="brand">
+        <div class="brand-icon">📦</div>
+        <div class="brand-info">
+          <h1>StoreNotify Tienda</h1>
+          <p id="subBrandText">Recepción en tiempo real desde el celular en casa</p>
+        </div>
+      </div>
+
+      <div class="header-status-group">
+        <div class="user-badge" id="currentUserBadge">
+          👤 <span id="lblCurrentUserName">Usuario</span> (<span id="lblCurrentUserRole">Rol</span>)
+        </div>
+
+        <div class="status-badge">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="statusLabel">Conectando...</span>
+        </div>
+
+        <button class="btn btn-primary" id="soundToggleBtn" onclick="toggleSound()">
+          🔊 Sonido
+        </button>
+
+        <button class="btn btn-secondary" onclick="requestDesktopPermissions()" title="Activar avisos flotantes de Chrome">
+          🖥️ Alertas
+        </button>
+
+        <button class="btn btn-secondary" onclick="openApkModal()">
+          📱 APK Celular
+        </button>
+
+        <button class="btn btn-outline-danger" onclick="logout()" title="Cerrar turno y salir">
+          🚪 Salir
+        </button>
+      </div>
+    </header>
+
+    <!-- Barra de Pestañas (Solo Visible para Rol Admin) -->
+    <div class="nav-tabs" id="adminNavTabs" style="display: none;">
+      <button class="tab-btn active" id="tabLiveFeed" onclick="switchTab('live')">
+        📦 Panel de Entregas en Vivo
+      </button>
+      <button class="tab-btn" id="tabUsers" onclick="switchTab('users')">
+        👥 Gestión de Usuarios
+      </button>
+      <button class="tab-btn" id="tabSessions" onclick="switchTab('sessions')">
+        🕒 Historial de Sesiones &amp; Turnos
+      </button>
     </div>
 
-    <div class="notification-grid" id="notificationGrid">
-      <!-- Se llena dinámicamente mediante app.js -->
-    </div>
-  </main>
+    <!-- SECCIÓN 1: PANEL EN VIVO DE NOTIFICACIONES -->
+    <section id="sectionLiveFeed">
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Buscar por guía, pedido, proveedor o texto...">
+        </div>
 
-  <!-- Modal de Descarga & Configuración para el Celular -->
+        <div class="filter-tags">
+          <button class="filter-pill active" data-filter="all">Todas</button>
+          <button class="filter-pill" data-filter="delivery">🛵 Entregas &amp; Repartos</button>
+          <button class="filter-pill" data-filter="chat">💬 WhatsApp &amp; Proveedores</button>
+          <button class="filter-pill" data-filter="MercadoLibre">MercadoLibre</button>
+          <button class="filter-pill" data-filter="Rappi">Rappi</button>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-secondary" onclick="simulateDelivery()" style="font-size: 0.8rem;">
+            ⚡ Probar Alerta
+          </button>
+        </div>
+      </div>
+
+      <main>
+        <div class="section-header">
+          <h2>Avisos de Entrega Recibidos</h2>
+          <span style="font-size: 0.85rem; color: var(--text-muted);" id="notifCount">0 notificaciones</span>
+        </div>
+
+        <div class="notification-grid" id="notificationGrid">
+          <!-- Tarjetas en vivo -->
+        </div>
+      </main>
+    </section>
+
+    <!-- SECCIÓN 2: GESTIÓN DE USUARIOS (SOLO ADMIN) -->
+    <section id="sectionUsers" style="display: none;">
+      <main>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <div>
+            <h2 style="font-size: 1.25rem; font-weight: 700;">Gestión de Usuarios</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Crea y administra las cuentas de administradores y empleados.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openNewUserModal()">
+            ➕ Nuevo Usuario
+          </button>
+        </div>
+
+        <div class="data-table-card">
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre Completo</th>
+                  <th>Usuario</th>
+                  <th>Rol</th>
+                  <th>Fecha de Creación</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <!-- Se llena con app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- SECCIÓN 3: HISTORIAL DE SESIONES & TURNOS (SOLO ADMIN) -->
+    <section id="sectionSessions" style="display: none;">
+      <main>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <div>
+            <h2 style="font-size: 1.25rem; font-weight: 700;">Sesiones &amp; Turnos de Trabajo</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Registro de cada empleado conectado y las notificaciones recibidas en su turno.</p>
+          </div>
+          <button class="btn btn-secondary" onclick="loadAdminSessions()">
+            🔄 Actualizar
+          </button>
+        </div>
+
+        <div class="data-table-card">
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Usuario / Empleado</th>
+                  <th>Rol</th>
+                  <th>Inicio de Turno</th>
+                  <th>Fin de Turno</th>
+                  <th>Estado</th>
+                  <th>Notificaciones Recibidas</th>
+                  <th>Auditoría</th>
+                </tr>
+              </thead>
+              <tbody id="sessionsTableBody">
+                <!-- Se llena con app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </section>
+
+  </div>
+
+  <!-- MODAL: CREAR NUEVO USUARIO -->
+  <div class="modal-overlay" id="newUserModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Crear Nueva Cuenta</h3>
+        <button class="modal-close" onclick="closeNewUserModal()">&times;</button>
+      </div>
+
+      <form id="newUserForm">
+        <div class="form-group">
+          <label for="newFullName">Nombre Completo</label>
+          <input type="text" id="newFullName" class="form-control" placeholder="Ej: Juan Pérez" required>
+        </div>
+
+        <div class="form-group">
+          <label for="newUsername">Nombre de Usuario (Login)</label>
+          <input type="text" id="newUsername" class="form-control" placeholder="Ej: juanp" required>
+        </div>
+
+        <div class="form-group">
+          <label for="newPassword">Contraseña</label>
+          <input type="password" id="newPassword" class="form-control" placeholder="Mínimo 6 caracteres" required>
+        </div>
+
+        <div class="form-group">
+          <label for="newRole">Rol Asignado</label>
+          <select id="newRole" class="form-control">
+            <option value="usuario">Usuario (Empleado de tienda)</option>
+            <option value="admin">Administrador (Acceso total)</option>
+          </select>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeNewUserModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar Usuario</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: NOTIFICACIONES DE UNA SESIÓN -->
+  <div class="modal-overlay" id="sessionNotifsModal">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="modalSessionTitle">Notificaciones del Turno</h3>
+          <p id="modalSessionSubtitle" style="font-size: 0.8rem; color: var(--text-muted);"></p>
+        </div>
+        <button class="modal-close" onclick="closeSessionNotifsModal()">&times;</button>
+      </div>
+
+      <div id="sessionNotifsList" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 60vh; overflow-y: auto;">
+        <!-- Se llena dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DESCARGA APK CELULAR -->
   <div class="modal-overlay" id="apkModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -87,36 +270,27 @@
       </div>
 
       <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
-        Instala la app en el teléfono que se quedará en casa. Cada vez que reciba un aviso de entrega o mensaje, se transmitirá inmediatamente a esta pantalla.
+        Instala la app en el teléfono que se quedará en casa para transmitir las notificaciones de entregas.
       </p>
 
       <div style="text-align: center;">
         <div class="qr-box">
           <img id="qrImage" src="" alt="Código QR Descarga APK" style="width: 160px; height: 160px; display: block;">
         </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">Escanea con la cámara del celular para descargar el instalador (.apk)</p>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Escanea con la cámara del celular para descargar el APK</p>
         <div style="margin-top: 0.85rem;">
           <a href="/download/app-debug.apk" class="btn btn-primary" download style="display: inline-flex;">
-            ⬇️ Descargar APK en este dispositivo
+            ⬇️ Descargar APK
           </a>
         </div>
       </div>
 
       <div style="margin-top: 1.5rem; border-top: 1px solid var(--card-border); padding-top: 1rem;">
-        <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem;">Configuración en la App:</h4>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">
-          1. Abre la app e ingresa esta URL en <b>"URL del Servidor"</b>:
-        </p>
+        <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem;">URL del Servidor para la app:</h4>
         <div class="code-box">
           <span id="serverUrlBox">https://...</span>
           <button class="btn btn-secondary" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyText(document.getElementById('serverUrlBox').textContent)">Copiar</button>
         </div>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">
-          2. Activa el interruptor <b>"Acceso a Notificaciones"</b> cuando el sistema Android te lo solicite.
-        </p>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
-          3. ¡Listo! Presiona "Enviar prueba" en el celular y verás la alerta sonar aquí en la tienda.
-        </p>
       </div>
     </div>
   </div>
