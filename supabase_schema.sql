@@ -80,7 +80,7 @@ CREATE POLICY "Anon Full Access Session Notifications" ON public.session_notific
 INSERT INTO public.app_users (username, password_hash, full_name, role, is_active)
 VALUES (
     'admin',
-    '$2a$10$w09yYyAov4YkHj4Uq.P0w.hD1oHwK0K35V8XbB1c/g19g2588s7yC',
+    '$2b$10$ahXq7hntTAYGVLlHWbAl7.Sc8ER7ToyHkzOJXRL5L1vD2jSmMX71u',
     'Administrador Principal',
     'admin',
     true
