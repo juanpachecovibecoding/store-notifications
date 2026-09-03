@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: store-notify-server
+    env: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: API_KEY
+        value: tienda123

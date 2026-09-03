@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notificaciones de Entregas & Mercadería - Tienda</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Header Superior -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">📦</div>
+      <div class="brand-info">
+        <h1>Centro de Notificaciones de Tienda</h1>
+        <p>Recepción en tiempo real desde el celular en casa</p>
+      </div>
+    </div>
+
+    <div class="header-status-group">
+      <div class="status-badge">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusLabel">Conectando...</span>
+      </div>
+
+      <button class="btn btn-primary" id="soundToggleBtn" onclick="toggleSound()">
+        🔊 Sonido Activado
+      </button>
+
+      <button class="btn btn-secondary" onclick="requestDesktopPermissions()" title="Activar avisos flotantes de Chrome">
+        🖥️ Alertas de Pantalla
+      </button>
+
+      <button class="btn btn-secondary" onclick="openApkModal()">
+        📱 Conectar Celular
+      </button>
+    </div>
+  </header>
+
+  <!-- Barra de Herramientas y Filtros -->
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Buscar por guía, pedido, proveedor o texto...">
+    </div>
+
+    <div class="filter-tags">
+      <button class="filter-pill active" data-filter="all">Todas</button>
+      <button class="filter-pill" data-filter="delivery">🛵 Entregas & Repartos</button>
+      <button class="filter-pill" data-filter="chat">💬 WhatsApp & Proveedores</button>
+      <button class="filter-pill" data-filter="MercadoLibre">MercadoLibre</button>
+      <button class="filter-pill" data-filter="Rappi">Rappi</button>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem;">
+      <button class="btn btn-secondary" onclick="simulateDelivery()" style="font-size: 0.8rem;">
+        ⚡ Probar Alerta
+      </button>
+      <button class="btn btn-outline-danger" onclick="clearAll()" style="font-size: 0.8rem;">
+        🗑️ Limpiar
+      </button>
+    </div>
+  </div>
+
+  <!-- Contenedor Principal de Notificaciones -->
+  <main>
+    <div class="section-header">
+      <h2>Avisos Recibidos</h2>
+      <span style="font-size: 0.85rem; color: var(--text-muted);" id="notifCount">0 notificaciones</span>
+    </div>
+
+    <div class="notification-grid" id="notificationGrid">
+      <!-- Se llena dinámicamente mediante app.js -->
+    </div>
+  </main>
+
+  <!-- Modal de Descarga & Configuración para el Celular -->
+  <div class="modal-overlay" id="apkModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>📱 Conectar Celular en Casa</h3>
+        <button class="modal-close" onclick="closeApkModal()">&times;</button>
+      </div>
+
+      <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
+        Instala la app en el teléfono que se quedará en casa. Cada vez que reciba un aviso de entrega o mensaje, se transmitirá inmediatamente a esta pantalla.
+      </p>
+
+      <div style="text-align: center;">
+        <div class="qr-box">
+          <img id="qrImage" src="" alt="Código QR Descarga APK" style="width: 160px; height: 160px; display: block;">
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Escanea con la cámara del celular para descargar el instalador (.apk)</p>
+        <div style="margin-top: 0.85rem;">
+          <a href="/download/app-debug.apk" class="btn btn-primary" download style="display: inline-flex;">
+            ⬇️ Descargar APK en este dispositivo
+          </a>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem; border-top: 1px solid var(--card-border); padding-top: 1rem;">
+        <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem;">Configuración en la App:</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          1. Abre la app e ingresa esta URL en <b>"URL del Servidor"</b>:
+        </p>
+        <div class="code-box">
+          <span id="serverUrlBox">https://...</span>
+          <button class="btn btn-secondary" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="copyText(document.getElementById('serverUrlBox').textContent)">Copiar</button>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          2. Activa el interruptor <b>"Acceso a Notificaciones"</b> cuando el sistema Android te lo solicite.
+        </p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+          3. ¡Listo! Presiona "Enviar prueba" en el celular y verás la alerta sonar aquí en la tienda.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">StoreNotify</string>
+    <string name="service_name">Receptor de Notificaciones Tienda</string>
+    <string name="title_settings">Configuración de Conexión</string>
+    <string name="server_url_hint">https://tu-servidor.app.github.dev</string>
+    <string name="api_key_hint">tienda123</string>
+</resources>

@@ -1,0 +1,15 @@
+# Dependencias Node
+node_modules/
+server/node_modules/
+
+# Android SDK y Gradle binaries descargados
+android-sdk/
+gradle-8.7/
+.gradle/
+android/.gradle/
+android/app/build/
+local.properties
+
+# Logs
+*.log
+.DS_Store
