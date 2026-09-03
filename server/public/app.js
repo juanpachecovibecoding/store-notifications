@@ -173,12 +173,15 @@ function initAppView() {
   document.getElementById('lblCurrentUserName').textContent = currentUser.fullName || currentUser.username;
   document.getElementById('lblCurrentUserRole').textContent = currentUser.role === 'admin' ? 'Administrador' : 'Empleado';
 
-  // Navegación para Admin
+  // Navegación y opciones exclusivas para Admin
   const adminTabs = document.getElementById('adminNavTabs');
+  const btnApk = document.getElementById('btnApkModal');
   if (currentUser.role === 'admin') {
-    adminTabs.style.display = 'flex';
+    if (adminTabs) adminTabs.style.display = 'flex';
+    if (btnApk) btnApk.style.display = 'inline-flex';
   } else {
-    adminTabs.style.display = 'none';
+    if (adminTabs) adminTabs.style.display = 'none';
+    if (btnApk) btnApk.style.display = 'none';
   }
 
   switchTab('live');
@@ -790,6 +793,9 @@ function toggleSound() {
 }
 
 function openApkModal() {
+  if (!currentUser || currentUser.role !== 'admin') {
+    return;
+  }
   const modal = document.getElementById('apkModal');
   const urlBox = document.getElementById('serverUrlBox');
   const qrImg = document.getElementById('qrImage');
