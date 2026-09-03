@@ -768,10 +768,15 @@ function updateSearchSuggestions() {
     if (n.appName) terms.add(n.appName);
     if (n.title) {
       if (n.title.length < 35) terms.add(n.title);
+      // Extraer montos ($100, S/ 50, etc.) o palabras clave
+      const amounts = n.title.match(/(?:[$€S\/]\s*|\b\$\s*)\d+(?:[.,]\d{2})?|\b\d+(?:[.,]\d{2})?\s*(?:USD|PEN|ARS|MXN|COP|CLP)\b/gi);
+      if (amounts) amounts.forEach(a => terms.add(a));
       const matches = n.title.match(/(#[A-Za-z0-9_-]+|\b[A-ZÁÉÍÓÚa-záéíóú0-9]{4,}\b)/g);
       if (matches) matches.forEach(m => terms.add(m));
     }
     if (n.text) {
+      const amounts = n.text.match(/(?:[$€S\/]\s*|\b\$\s*)\d+(?:[.,]\d{2})?|\b\d+(?:[.,]\d{2})?\s*(?:USD|PEN|ARS|MXN|COP|CLP)\b/gi);
+      if (amounts) amounts.forEach(a => terms.add(a));
       const matches = n.text.match(/(#[A-Za-z0-9_-]+|\b\d{4,}\b)/g);
       if (matches) matches.forEach(m => terms.add(m));
     }
@@ -784,22 +789,22 @@ async function simulateDelivery() {
   initAudio();
   const samples = [
     {
+      appName: 'Transferencia Bancaria',
+      packageName: 'com.bank.app',
+      title: '¡Transferencia Recibida! $150.00',
+      text: 'Has recibido $150.00 de María Gómez. Referencia: #TRX89210.'
+    },
+    {
+      appName: 'Mercado Pago',
+      packageName: 'com.mercadopago.wallet',
+      title: '¡Te transfirieron $85.50!',
+      text: 'Juan Pérez te envió $85.50 a tu cuenta. Dinero disponible.'
+    },
+    {
       appName: 'Rappi',
       packageName: 'com.rappi.store',
       title: '¡Tu pedido de mercadería está cerca!',
-      text: 'El repartidor Juan Carlos está a 2 minutos de la tienda. Código de recepción: 4982.'
-    },
-    {
-      appName: 'MercadoLibre',
-      packageName: 'com.mercadolibre',
-      title: 'Paquete en camino a entrega hoy',
-      text: 'Tu envío #ML7892134 de insumos de tienda llegará antes de las 14:00.'
-    },
-    {
-      appName: 'PedidosYa',
-      packageName: 'com.pedidosya',
-      title: 'Repartidor asignado a la orden #1042',
-      text: 'Carlos Mendoza ha tomado la orden y va rumbo a destino.'
+      text: 'El repartidor Juan Carlos está a 2 minutos de la tienda. Código: 4982.'
     }
   ];
 
