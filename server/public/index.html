@@ -14,6 +14,9 @@
 
   <!-- VISTA 1: INICIO DE SESIÓN -->
   <div id="authView" class="auth-container">
+    <button type="button" class="btn btn-secondary" onclick="toggleTheme()" title="Cambiar a Modo Claro / Oscuro" style="position: absolute; top: 1.25rem; right: 1.5rem; padding: 0.45rem 0.75rem;">
+      <span class="theme-icon-indicator">☀️</span>
+    </button>
     <div class="login-card">
       <div class="login-logo">📲</div>
       <h2 style="font-size: 1.4rem; margin-bottom: 0.25rem;">Storefy</h2>
@@ -65,6 +68,11 @@
           <span class="status-dot" id="statusDot"></span>
           <span id="statusLabel">Conectando...</span>
         </div>
+
+        <!-- Selector Modo Claro / Oscuro -->
+        <button class="btn btn-secondary" onclick="toggleTheme()" title="Cambiar a Modo Claro / Oscuro" style="padding: 0.45rem 0.75rem;">
+          <span class="theme-icon-indicator">☀️</span>
+        </button>
 
         <button class="btn btn-primary" id="soundToggleBtn" onclick="toggleSound()">
           🔊 Sonido

@@ -14,6 +14,7 @@ let ws = null;
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', async () => {
+  initTheme();
   setupAuthForm();
   setupFiltersAndSearch();
 
@@ -28,6 +29,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     initAudio();
   }, { once: true });
 });
+
+// Manejo de Modo Claro / Oscuro
+function initTheme() {
+  const savedTheme = localStorage.getItem('storefy_theme');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-theme');
+    updateThemeIcons(true);
+  } else {
+    document.body.classList.remove('light-theme');
+    updateThemeIcons(false);
+  }
+}
+
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-theme');
+  localStorage.setItem('storefy_theme', isLight ? 'light' : 'dark');
+  updateThemeIcons(isLight);
+}
+
+function updateThemeIcons(isLight) {
+  const iconText = isLight ? '🌙' : '☀️';
+  document.querySelectorAll('.theme-icon-indicator').forEach(el => {
+    el.textContent = iconText;
+  });
+}
 
 function setupAuthForm() {
   const loginForm = document.getElementById('loginForm');
