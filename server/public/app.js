@@ -3,6 +3,7 @@ let currentUser = null;
 let sessionToken = localStorage.getItem('store_notify_token') || null;
 let notifications = [];
 let selectedDate = '';
+let selectedHour = '';
 let searchQuery = '';
 let soundEnabled = true;
 let audioCtx = null;
@@ -649,10 +650,11 @@ function render(highlightId = null) {
   if (!container) return;
 
   const filtered = notifications.filter(item => {
+    const dateObj = new Date(item.postTime || item.receivedAt);
+
     // Filtro por fecha específica seleccionada
     let matchesDate = true;
     if (selectedDate) {
-      const dateObj = new Date(item.postTime || item.receivedAt);
       const yyyy = dateObj.getFullYear();
       const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
       const dd = String(dateObj.getDate()).padStart(2, '0');
@@ -660,16 +662,24 @@ function render(highlightId = null) {
       matchesDate = (localDateStr === selectedDate);
     }
 
+    // Filtro por hora específica seleccionada
+    let matchesHour = true;
+    if (selectedHour !== '') {
+      matchesHour = (dateObj.getHours() === parseInt(selectedHour, 10));
+    }
+
     // Filtro por texto y sugerencias predictivas
     const fullSearch = `${item.appName} ${item.title} ${item.text} ${item.bigText}`.toLowerCase();
     const matchesSearch = !searchQuery || fullSearch.includes(searchQuery.toLowerCase());
 
-    return matchesDate && matchesSearch;
+    return matchesDate && matchesHour && matchesSearch;
   });
 
   if (countBadge) {
     const dateLabel = selectedDate ? ` (del ${selectedDate})` : '';
-    countBadge.textContent = `${filtered.length} notificaciones${dateLabel}`;
+    const hourPad = selectedHour !== '' ? String(selectedHour).padStart(2, '0') : '';
+    const hourLabel = selectedHour !== '' ? ` [${hourPad}:00 - ${hourPad}:59]` : '';
+    countBadge.textContent = `${filtered.length} notificaciones${dateLabel}${hourLabel}`;
   }
 
   if (filtered.length === 0) {
@@ -677,7 +687,7 @@ function render(highlightId = null) {
       <div class="empty-state">
         <div style="font-size: 3rem; margin-bottom: 0.5rem;">🔔</div>
         <h3>No se encontraron avisos</h3>
-        <p>${selectedDate ? `No hay notificaciones para la fecha ${selectedDate}.` : 'No hay notificaciones con los filtros ingresados.'}</p>
+        <p>${selectedDate || selectedHour !== '' ? 'No hay notificaciones con los filtros de fecha u hora seleccionados.' : 'No hay notificaciones con los filtros ingresados.'}</p>
         <button class="btn btn-secondary" onclick="simulateDelivery()">✨ Probar Notificación</button>
       </div>
     `;
@@ -748,6 +758,18 @@ function setupFiltersAndSearch() {
       render();
     });
   }
+
+  const hourFilter = document.getElementById('hourFilter');
+  const btnClearHour = document.getElementById('btnClearHour');
+  if (hourFilter) {
+    hourFilter.addEventListener('change', (e) => {
+      selectedHour = e.target.value;
+      if (btnClearHour) {
+        btnClearHour.style.display = selectedHour !== '' ? 'inline-flex' : 'none';
+      }
+      render();
+    });
+  }
 }
 
 function clearDateFilter() {
@@ -756,6 +778,15 @@ function clearDateFilter() {
   const btnClearDate = document.getElementById('btnClearDate');
   if (dateFilter) dateFilter.value = '';
   if (btnClearDate) btnClearDate.style.display = 'none';
+  render();
+}
+
+function clearHourFilter() {
+  selectedHour = '';
+  const hourFilter = document.getElementById('hourFilter');
+  const btnClearHour = document.getElementById('btnClearHour');
+  if (hourFilter) hourFilter.value = '';
+  if (btnClearHour) btnClearHour.style.display = 'none';
   render();
 }
 

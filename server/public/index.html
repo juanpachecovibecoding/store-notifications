@@ -116,6 +116,39 @@
           <button type="button" class="date-clear-btn" id="btnClearDate" onclick="clearDateFilter()" title="Quitar filtro de fecha" style="display: none;">✖</button>
         </div>
 
+        <!-- Filtro por Hora -->
+        <div class="date-filter-box">
+          <span style="font-size: 0.9rem;" title="Filtrar por hora">⏰</span>
+          <select id="hourFilter" title="Filtrar por hora del día">
+            <option value="">Todas las horas</option>
+            <option value="0">00:00 - 00:59</option>
+            <option value="1">01:00 - 01:59</option>
+            <option value="2">02:00 - 02:59</option>
+            <option value="3">03:00 - 03:59</option>
+            <option value="4">04:00 - 04:59</option>
+            <option value="5">05:00 - 05:59</option>
+            <option value="6">06:00 - 06:59</option>
+            <option value="7">07:00 - 07:59</option>
+            <option value="8">08:00 - 08:59</option>
+            <option value="9">09:00 - 09:59</option>
+            <option value="10">10:00 - 10:59</option>
+            <option value="11">11:00 - 11:59</option>
+            <option value="12">12:00 - 12:59</option>
+            <option value="13">13:00 - 13:59</option>
+            <option value="14">14:00 - 14:59</option>
+            <option value="15">15:00 - 15:59</option>
+            <option value="16">16:00 - 16:59</option>
+            <option value="17">17:00 - 17:59</option>
+            <option value="18">18:00 - 18:59</option>
+            <option value="19">19:00 - 19:59</option>
+            <option value="20">20:00 - 20:59</option>
+            <option value="21">21:00 - 21:59</option>
+            <option value="22">22:00 - 22:59</option>
+            <option value="23">23:00 - 23:59</option>
+          </select>
+          <button type="button" class="date-clear-btn" id="btnClearHour" onclick="clearHourFilter()" title="Quitar filtro de hora" style="display: none;">✖</button>
+        </div>
+
         <!-- Botón Probar Alerta -->
         <div>
           <button class="btn btn-secondary" onclick="simulateDelivery()" style="font-size: 0.85rem;">

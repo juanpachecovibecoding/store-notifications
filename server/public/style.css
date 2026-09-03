@@ -294,7 +294,8 @@ header {
   padding: 0.55rem 0.85rem;
 }
 
-.date-filter-box input[type="date"] {
+.date-filter-box input[type="date"],
+.date-filter-box select {
   background: transparent;
   border: none;
   color: var(--text-main);
@@ -302,6 +303,11 @@ header {
   outline: none;
   color-scheme: dark;
   cursor: pointer;
+}
+
+.date-filter-box select option {
+  background: #1e293b;
+  color: #fff;
 }
 
 .date-clear-btn {
