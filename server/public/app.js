@@ -700,7 +700,7 @@ function render(highlightId = null) {
               ${meta.badge}
             </span>
             <span class="notif-time">⏰ ${formatDate(item.postTime || item.receivedAt)}</span>
-            ${isAttended ? '<span style="color: var(--success); font-size: 0.75rem; font-weight: 600;">✅ Atendido</span>' : '<span style="color: var(--warning); font-size: 0.75rem; font-weight: 600;">⚡ En camino</span>'}
+            ${isAttended ? '<span style="color: var(--success); font-size: 0.75rem; font-weight: 600;">✅ Atendido</span>' : '<span style="color: var(--warning); font-size: 0.75rem; font-weight: 600;">⚡ Verificado por Storefy</span>'}
           </div>
           <div class="notif-title">${escapeHtml(item.title)}</div>
           <div class="notif-body">${escapeHtml(item.text || item.bigText)}</div>

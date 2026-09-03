@@ -6,7 +6,7 @@ export ANDROID_HOME=/workspaces/codespaces-blank/android-sdk
 export PATH=$JAVA_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
 
 echo "============================================"
-echo "🔨 Compilando APK de StoreNotify en Codespaces..."
+echo "🔨 Compilando APK de Storefy en Codespaces..."
 echo "Java: $(java -version 2>&1 | head -n 1)"
 echo "Android SDK: $ANDROID_HOME"
 echo "============================================"

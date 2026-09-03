@@ -671,7 +671,7 @@ app.patch('/api/notifications/:id', async (req, res) => {
 app.get('/download/app-debug.apk', (req, res) => {
   const apkPath = path.join(__dirname, 'public', 'download', 'app-debug.apk');
   if (fs.existsSync(apkPath)) {
-    res.setHeader('Content-Disposition', 'attachment; filename="StoreNotify.apk"');
+    res.setHeader('Content-Disposition', 'attachment; filename="Storefy.apk"');
     res.setHeader('Content-Type', 'application/vnd.android.package-archive');
     return res.sendFile(apkPath);
   } else {
@@ -683,7 +683,7 @@ app.get('/download/app-debug.apk', (req, res) => {
 app.get('/api/status', (req, res) => {
   res.json({
     status: 'online',
-    appName: 'Notificaciones Tienda con Supabase',
+    appName: 'Storefy con Supabase',
     serverTime: new Date().toISOString(),
     totalNotifications: inMemoryNotifications.length,
     activeSessions: inMemorySessions.filter(s => s.is_active).length,
@@ -698,7 +698,7 @@ app.get('*', (req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`=================================================`);
-  console.log(`🚀 Servidor StoreNotify con Supabase y Roles activo!`);
+  console.log(`🚀 Servidor Storefy con Supabase y Roles activo!`);
   console.log(`📡 Puerto: http://localhost:${PORT}`);
   console.log(`🗄️ Supabase URL: ${SUPABASE_URL}`);
   console.log(`🔑 Admin por defecto: admin / admin123`);
