@@ -284,29 +284,43 @@ header {
   color: var(--text-muted);
 }
 
-.filter-tags {
+.date-filter-box {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
-  overflow-x: auto;
-  padding-bottom: 0.25rem;
-}
-
-.filter-pill {
-  padding: 0.4rem 0.85rem;
-  border-radius: 9999px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--card-bg);
   border: 1px solid var(--card-border);
-  color: var(--text-muted);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s ease;
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
 }
 
-.filter-pill.active, .filter-pill:hover {
-  background: var(--primary);
-  border-color: var(--primary);
+.date-filter-box input[type="date"] {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 0.85rem;
+  outline: none;
+  color-scheme: dark;
+  cursor: pointer;
+}
+
+.date-clear-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.date-clear-btn:hover {
+  background: var(--danger);
   color: #fff;
 }
 

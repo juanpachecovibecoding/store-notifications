@@ -99,21 +99,25 @@
     <!-- SECCIÓN 1: PANEL EN VIVO DE NOTIFICACIONES -->
     <section id="sectionLiveFeed">
       <div class="toolbar">
+        <!-- Buscador Predictivo -->
         <div class="search-box">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" placeholder="Buscar por guía, pedido, proveedor o texto...">
+          <input type="text" id="searchInput" list="searchSuggestions" placeholder="Buscar por guía, pedido, app o texto..." autocomplete="off">
+          <datalist id="searchSuggestions">
+            <!-- Sugerencias predictivas automáticas -->
+          </datalist>
         </div>
 
-        <div class="filter-tags">
-          <button class="filter-pill active" data-filter="all">Todas</button>
-          <button class="filter-pill" data-filter="delivery">🛵 Entregas &amp; Repartos</button>
-          <button class="filter-pill" data-filter="chat">💬 WhatsApp &amp; Proveedores</button>
-          <button class="filter-pill" data-filter="MercadoLibre">MercadoLibre</button>
-          <button class="filter-pill" data-filter="Rappi">Rappi</button>
+        <!-- Filtro por Fecha -->
+        <div class="date-filter-box">
+          <span style="font-size: 0.9rem;" title="Filtrar por fecha">📅</span>
+          <input type="date" id="dateFilter" title="Filtrar notificaciones por fecha">
+          <button type="button" class="date-clear-btn" id="btnClearDate" onclick="clearDateFilter()" title="Quitar filtro de fecha" style="display: none;">✖</button>
         </div>
 
-        <div style="display: flex; gap: 0.5rem;">
-          <button class="btn btn-secondary" onclick="simulateDelivery()" style="font-size: 0.8rem;">
+        <!-- Botón Probar Alerta -->
+        <div>
+          <button class="btn btn-secondary" onclick="simulateDelivery()" style="font-size: 0.85rem;">
             ⚡ Probar Alerta
           </button>
         </div>

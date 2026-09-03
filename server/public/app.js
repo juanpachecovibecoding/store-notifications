@@ -2,7 +2,7 @@
 let currentUser = null;
 let sessionToken = localStorage.getItem('store_notify_token') || null;
 let notifications = [];
-let activeFilter = 'all';
+let selectedDate = '';
 let searchQuery = '';
 let soundEnabled = true;
 let audioCtx = null;
@@ -463,6 +463,7 @@ async function loadInitialNotifications() {
     const data = await res.json();
     if (data.notifications) {
       notifications = data.notifications;
+      updateSearchSuggestions();
       render();
     }
   } catch (e) {}
@@ -511,6 +512,7 @@ function handleServerMessage(msg) {
       notifications.unshift(item);
       playStoreChime();
       showDesktopNotification(item);
+      updateSearchSuggestions();
       render(item.id);
     }
   } else if (msg.type === 'UPDATE_NOTIFICATION') {
@@ -647,27 +649,36 @@ function render(highlightId = null) {
   if (!container) return;
 
   const filtered = notifications.filter(item => {
-    const meta = getAppMeta(item.appName, item.packageName);
-    const matchesFilter = activeFilter === 'all' ||
-      (activeFilter === 'delivery' && ['Rappi', 'PedidosYa', 'MercadoLibre', 'Amazon', 'Uber Eats'].includes(meta.badge)) ||
-      (activeFilter === 'chat' && ['WhatsApp', 'Telegram', 'Correo'].includes(meta.badge)) ||
-      meta.badge.toLowerCase().includes(activeFilter.toLowerCase());
+    // Filtro por fecha específica seleccionada
+    let matchesDate = true;
+    if (selectedDate) {
+      const dateObj = new Date(item.postTime || item.receivedAt);
+      const yyyy = dateObj.getFullYear();
+      const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const dd = String(dateObj.getDate()).padStart(2, '0');
+      const localDateStr = `${yyyy}-${mm}-${dd}`;
+      matchesDate = (localDateStr === selectedDate);
+    }
 
+    // Filtro por texto y sugerencias predictivas
     const fullSearch = `${item.appName} ${item.title} ${item.text} ${item.bigText}`.toLowerCase();
     const matchesSearch = !searchQuery || fullSearch.includes(searchQuery.toLowerCase());
 
-    return matchesFilter && matchesSearch;
+    return matchesDate && matchesSearch;
   });
 
-  if (countBadge) countBadge.textContent = `${filtered.length} notificaciones`;
+  if (countBadge) {
+    const dateLabel = selectedDate ? ` (del ${selectedDate})` : '';
+    countBadge.textContent = `${filtered.length} notificaciones${dateLabel}`;
+  }
 
   if (filtered.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
         <div style="font-size: 3rem; margin-bottom: 0.5rem;">🔔</div>
-        <h3>No hay avisos pendientes</h3>
-        <p>Las notificaciones de tu celular en casa aparecerán aquí en vivo vinculadas a tu turno.</p>
-        <button class="btn btn-secondary" onclick="simulateDelivery()">✨ Simular Notificación</button>
+        <h3>No se encontraron avisos</h3>
+        <p>${selectedDate ? `No hay notificaciones para la fecha ${selectedDate}.` : 'No hay notificaciones con los filtros ingresados.'}</p>
+        <button class="btn btn-secondary" onclick="simulateDelivery()">✨ Probar Notificación</button>
       </div>
     `;
     return;
@@ -688,7 +699,7 @@ function render(highlightId = null) {
             <span class="app-name-pill" style="background: ${meta.color}25; color: ${meta.color === '#ffe600' ? '#f59e0b' : meta.color};">
               ${meta.badge}
             </span>
-            <span class="notif-time">⏰ ${formatTime(item.postTime || item.receivedAt)}</span>
+            <span class="notif-time">⏰ ${formatDate(item.postTime || item.receivedAt)}</span>
             ${isAttended ? '<span style="color: var(--success); font-size: 0.75rem; font-weight: 600;">✅ Atendido</span>' : '<span style="color: var(--warning); font-size: 0.75rem; font-weight: 600;">⚡ En camino</span>'}
           </div>
           <div class="notif-title">${escapeHtml(item.title)}</div>
@@ -718,15 +729,6 @@ function escapeForAttr(str) {
 }
 
 function setupFiltersAndSearch() {
-  document.querySelectorAll('.filter-pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      activeFilter = pill.getAttribute('data-filter') || 'all';
-      render();
-    });
-  });
-
   const searchInput = document.getElementById('searchInput');
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
@@ -734,6 +736,48 @@ function setupFiltersAndSearch() {
       render();
     });
   }
+
+  const dateFilter = document.getElementById('dateFilter');
+  const btnClearDate = document.getElementById('btnClearDate');
+  if (dateFilter) {
+    dateFilter.addEventListener('change', (e) => {
+      selectedDate = e.target.value;
+      if (btnClearDate) {
+        btnClearDate.style.display = selectedDate ? 'inline-flex' : 'none';
+      }
+      render();
+    });
+  }
+}
+
+function clearDateFilter() {
+  selectedDate = '';
+  const dateFilter = document.getElementById('dateFilter');
+  const btnClearDate = document.getElementById('btnClearDate');
+  if (dateFilter) dateFilter.value = '';
+  if (btnClearDate) btnClearDate.style.display = 'none';
+  render();
+}
+
+function updateSearchSuggestions() {
+  const datalist = document.getElementById('searchSuggestions');
+  if (!datalist) return;
+  const terms = new Set();
+
+  notifications.forEach(n => {
+    if (n.appName) terms.add(n.appName);
+    if (n.title) {
+      if (n.title.length < 35) terms.add(n.title);
+      const matches = n.title.match(/(#[A-Za-z0-9_-]+|\b[A-ZÁÉÍÓÚa-záéíóú0-9]{4,}\b)/g);
+      if (matches) matches.forEach(m => terms.add(m));
+    }
+    if (n.text) {
+      const matches = n.text.match(/(#[A-Za-z0-9_-]+|\b\d{4,}\b)/g);
+      if (matches) matches.forEach(m => terms.add(m));
+    }
+  });
+
+  datalist.innerHTML = Array.from(terms).slice(0, 45).map(t => `<option value="${escapeHtml(t)}">`).join('');
 }
 
 async function simulateDelivery() {
