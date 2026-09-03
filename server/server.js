@@ -371,6 +371,80 @@ app.patch('/api/admin/users/:id/toggle', sessionAuthMiddleware, adminOnlyMiddlew
   res.json({ success: true, is_active: newStatus });
 });
 
+// Editar usuario (nombre, usuario, contraseña opcional, rol)
+app.put('/api/admin/users/:id', sessionAuthMiddleware, adminOnlyMiddleware, async (req, res) => {
+  const { id } = req.params;
+  const { fullName, username, password, role } = req.body;
+
+  if (!fullName || !username) {
+    return res.status(400).json({ error: 'Nombre y usuario son obligatorios' });
+  }
+
+  const updateFields = {
+    full_name: fullName.trim(),
+    username: username.trim().toLowerCase(),
+    role: role === 'admin' ? 'admin' : 'usuario'
+  };
+
+  if (password && password.trim().length > 0) {
+    updateFields.password_hash = bcrypt.hashSync(password.trim(), 10);
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('app_users')
+      .update(updateFields)
+      .eq('id', id)
+      .select('id, username, full_name, role, is_active, created_at')
+      .single();
+
+    if (!error && data) {
+      const idx = inMemoryUsers.findIndex(u => u.id === id);
+      if (idx !== -1) {
+        inMemoryUsers[idx] = { ...inMemoryUsers[idx], ...updateFields, ...data };
+      }
+      return res.json({ success: true, user: data });
+    }
+  } catch (err) {
+    console.warn('[Supabase] Error actualizando usuario:', err.message);
+  }
+
+  const memIdx = inMemoryUsers.findIndex(u => u.id === id);
+  if (memIdx !== -1) {
+    inMemoryUsers[memIdx] = { ...inMemoryUsers[memIdx], ...updateFields };
+    const { password_hash, ...safe } = inMemoryUsers[memIdx];
+    return res.json({ success: true, user: safe });
+  }
+
+  res.status(404).json({ error: 'Usuario no encontrado' });
+});
+
+// Eliminar usuario
+app.delete('/api/admin/users/:id', sessionAuthMiddleware, adminOnlyMiddleware, async (req, res) => {
+  const { id } = req.params;
+
+  if (req.user.id === id) {
+    return res.status(400).json({ error: 'No puedes eliminar tu propia cuenta de administrador' });
+  }
+
+  try {
+    const { error } = await supabase
+      .from('app_users')
+      .delete()
+      .eq('id', id);
+
+    if (!error) {
+      inMemoryUsers = inMemoryUsers.filter(u => u.id !== id);
+      return res.json({ success: true, message: 'Usuario eliminado correctamente' });
+    }
+  } catch (err) {
+    console.warn('[Supabase] Error eliminando usuario:', err.message);
+  }
+
+  inMemoryUsers = inMemoryUsers.filter(u => u.id !== id);
+  res.json({ success: true, message: 'Usuario eliminado correctamente' });
+});
+
 // Listar todas las sesiones
 app.get('/api/admin/sessions', sessionAuthMiddleware, adminOnlyMiddleware, async (req, res) => {
   try {

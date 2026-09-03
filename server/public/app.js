@@ -95,6 +95,41 @@ function setupAuthForm() {
       }
     });
   }
+
+  const editUserForm = document.getElementById('editUserForm');
+  if (editUserForm) {
+    editUserForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editUserId').value;
+      const fullName = document.getElementById('editFullName').value.trim();
+      const username = document.getElementById('editUsername').value.trim();
+      const password = document.getElementById('editPassword').value.trim();
+      const role = document.getElementById('editRole').value;
+
+      try {
+        const res = await fetch(`/api/admin/users/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${sessionToken}`
+          },
+          body: JSON.stringify({ fullName, username, password, role })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          alert(data.error || 'No se pudo actualizar el usuario');
+          return;
+        }
+
+        alert('Usuario actualizado correctamente!');
+        closeEditUserModal();
+        loadAdminUsers();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    });
+  }
 }
 
 async function verifyCurrentSession() {
@@ -201,6 +236,8 @@ function switchTab(tab) {
 // MÓDULO ADMIN: USUARIOS
 // ==========================================
 
+let cachedAdminUsers = [];
+
 async function loadAdminUsers() {
   try {
     const res = await fetch('/api/admin/users', {
@@ -209,15 +246,16 @@ async function loadAdminUsers() {
     const data = await res.json();
     if (!data.success) return;
 
+    cachedAdminUsers = data.users || [];
     const tbody = document.getElementById('usersTableBody');
     if (!tbody) return;
 
-    if (data.users.length === 0) {
+    if (cachedAdminUsers.length === 0) {
       tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No hay usuarios registrados</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = data.users.map(u => {
+    tbody.innerHTML = cachedAdminUsers.map(u => {
       const isSelf = u.id === currentUser.id;
       return `
         <tr>
@@ -231,17 +269,64 @@ async function loadAdminUsers() {
               : '<span class="badge-ended">● Desactivado</span>'}
           </td>
           <td>
-            ${isSelf ? '<span style="color: var(--text-muted); font-size: 0.8rem;">(Tu cuenta)</span>' : `
-              <button class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="toggleUserStatus('${u.id}')">
-                ${u.is_active ? 'Desactivar' : 'Activar'}
+            <div style="display: flex; gap: 0.35rem; align-items: center; flex-wrap: wrap;">
+              <button class="btn btn-secondary" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="openEditUserModal('${u.id}')">
+                ✏️ Editar
               </button>
-            `}
+              ${!isSelf ? `
+                <button class="btn btn-secondary" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="toggleUserStatus('${u.id}')">
+                  ${u.is_active ? 'Desactivar' : 'Activar'}
+                </button>
+                <button class="btn btn-outline-danger" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;" onclick="deleteUser('${u.id}', '${escapeForAttr(u.username)}')">
+                  🗑️ Eliminar
+                </button>
+              ` : '<span style="color: var(--text-muted); font-size: 0.75rem;">(Tu cuenta)</span>'}
+            </div>
           </td>
         </tr>
       `;
     }).join('');
   } catch (err) {
     console.error(err);
+  }
+}
+
+function openEditUserModal(userId) {
+  const user = cachedAdminUsers.find(u => u.id === userId);
+  if (!user) return;
+
+  document.getElementById('editUserId').value = user.id;
+  document.getElementById('editFullName').value = user.full_name || '';
+  document.getElementById('editUsername').value = user.username || '';
+  document.getElementById('editPassword').value = '';
+  document.getElementById('editRole').value = user.role || 'usuario';
+
+  document.getElementById('editUserModal').classList.add('active');
+}
+
+function closeEditUserModal() {
+  document.getElementById('editUserModal').classList.remove('active');
+}
+
+async function deleteUser(id, username) {
+  if (!confirm(`¿Estás seguro de que deseas eliminar permanentemente al usuario "${username}"?`)) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/admin/users/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${sessionToken}` }
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || 'No se pudo eliminar el usuario');
+      return;
+    }
+    alert(`Usuario ${username} eliminado.`);
+    loadAdminUsers();
+  } catch (err) {
+    alert('Error: ' + err.message);
   }
 }
 
