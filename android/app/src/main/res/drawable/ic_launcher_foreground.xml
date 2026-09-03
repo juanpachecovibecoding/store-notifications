@@ -4,7 +4,24 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    
+    <!-- Smartphone body -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M54,27c-9.94,0 -18,8.06 -18,18v16.17l-4.59,4.59c-0.89,0.89 -0.26,2.41 1,2.41h43.17c1.26,0 1.9,-1.52 1,-2.41l-4.58,-4.59V45c0,-9.94 -8.06,-18 -18,-18zM54,77c3.31,0 6,-2.69 6,-6h-12c0,3.31 2.69,6 6,6z"/>
+        android:pathData="M38,22h32c3.31,0 6,2.69 6,6v52c0,3.31 -2.69,6 -6,6H38c-3.31,0 -6,-2.69 -6,-6V28c0,-3.31 2.69,-6 6,-6zm2,8v44h28V30H40zm12,47h4v2h-4v-2z"/>
+
+    <!-- Pantalla interior -->
+    <path
+        android:fillColor="#1E293B"
+        android:pathData="M40,30h28v44H40z"/>
+
+    <!-- Flecha entrante estilo 📲 -->
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M24,38l12,12 12,-12h-7V25h-10v13z"/>
+
+    <!-- Notificación en pantalla -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M44,36h20v4H44z M44,44h14v3H44z M44,51h10v3H44z"/>
 </vector>

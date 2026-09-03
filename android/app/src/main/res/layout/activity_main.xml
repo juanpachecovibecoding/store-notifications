@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📦"
+                android:text="📲"
                 android:textSize="32sp"
                 android:layout_marginEnd="12dp" />
 
@@ -43,7 +43,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Transmite avisos a la tienda por internet"
+                    android:text="Notificaciones de tus apps en tiempo real"
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
             </LinearLayout>
