@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Storefy - Propuesta Comercial para Comercios</title>
+  <style>
+    @page { size: A4; margin: 12mm; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1a1a1a;
+      line-height: 1.35;
+      margin: 0;
+      padding: 15px;
+      background: #fff;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-tag {
+      font-size: 10px;
+      background: #0f172a;
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .contact-head {
+      text-align: right;
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 500;
+    }
+    .hero {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      margin: 0 0 6px 0;
+      font-size: 19px;
+      color: #0f172a;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .hero p {
+      margin: 0;
+      font-size: 13px;
+      color: #475569;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .card {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-red .card-title { color: #dc2626; }
+    .card-green .card-title { color: #16a34a; }
+    .card ul {
+      margin: 0;
+      padding-left: 16px;
+      font-size: 12px;
+      color: #334155;
+    }
+    .card li { margin-bottom: 5px; }
+    
+    .steps {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+    .steps h3 {
+      margin: 0 0 10px 0;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #0f172a;
+    }
+    .step-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .step-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 10px 12px;
+      border-radius: 6px;
+    }
+    .step-num {
+      font-size: 10px;
+      font-weight: 800;
+      color: #2563eb;
+      margin-bottom: 3px;
+    }
+    .step-text {
+      font-size: 11.5px;
+      color: #334155;
+      font-weight: 500;
+    }
+
+    .offer {
+      background: #0f172a;
+      color: #fff;
+      border-radius: 8px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .offer h4 {
+      margin: 0 0 4px 0;
+      font-size: 15px;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+    .offer p {
+      margin: 0;
+      font-size: 11.5px;
+      color: #cbd5e1;
+    }
+    .offer-badge {
+      background: #22c55e;
+      color: #052e16;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .footer-note {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 600;
+    }
+    @media print {
+      body { padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo">
+      <span>📲 Storefy</span>
+      <span class="logo-tag">Sistema Antifraude en Tiempo Real</span>
+    </div>
+    <div class="contact-head">
+      Desarrollado por <strong>DevTech</strong><br>
+      Santa Fe, Argentina
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>Blindá tu comercio contra comprobantes y apps truchas de transferencias.</h1>
+    <p>Tus empleados validan el dinero acreditado en tiempo real en la pantalla de caja, <strong>sin necesidad de que les des acceso a tu cuenta bancaria ni prestes tu celular personal</strong>.</p>
+  </div>
+
+  <div class="grid">
+    <div class="card card-red">
+      <div class="card-title">❌ El Problema Actual</div>
+      <ul>
+        <li><strong>Estafas en segundos:</strong> Clientes muestran pantallas con apps clonadas que simulan una transferencia exitosa con comprobante falso.</li>
+        <li><strong>Cajeros desprotegidos:</strong> Por vergüenza o apuro con la fila, entregan la mercadería sin tener cómo verificar.</li>
+        <li><strong>Dueño a distancia:</strong> Si estás en otra sucursal o en tu casa, no podés estar enviando capturas de WhatsApp por cada compra.</li>
+      </ul>
+    </div>
+
+    <div class="card card-green">
+      <div class="card-title">✅ La Solución con Storefy</div>
+      <ul>
+        <li><strong>Alerta Sonora & Visual:</strong> En cuanto impacta la transferencia real, la pantalla del local hace '¡Ding!' y se ilumina en verde con el monto exacto.</li>
+        <li><strong>Privacidad y Seguridad 100%:</strong> La app en tu móvil solo detecta notificaciones. Nadie tiene tus claves ni ve tus saldos acumulados.</li>
+        <li><strong>Multi-sucursal:</strong> Monitoreá varias cajas o sucursales en simultáneo desde un solo panel central.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="steps">
+    <h3>¿Cómo funciona en tu negocio? (Puesta en marcha en 5 minutos)</h3>
+    <div class="step-grid">
+      <div class="step-item">
+        <div class="step-num">PASO 1</div>
+        <div class="step-text">Instalamos la app en tu celular (Mercado Pago, bancos, billeteras).</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">PASO 2</div>
+        <div class="step-text">Abrimos el panel de Storefy en la PC o tablet del mostrador de cobro.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">PASO 3</div>
+        <div class="step-text">El cliente transfiere ➔ Tu caja suena y muestra: <strong>'⚡ Verificado por Storefy'</strong>.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="offer">
+    <div>
+      <h4>Prueba Piloto: 14 Días 100% Gratis en tus Sucursales</h4>
+      <p>Te dejamos el sistema funcionando hoy mismo sin costo ni compromiso. Si a tu equipo no le da tranquilidad total, se retira sin explicaciones.</p>
+    </div>
+    <div class="offer-badge">
+      100% Bonificado<br><small style="font-weight: 500; text-transform: none;">por 14 días</small>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Contacto Directo: <strong>Juan Pacheco</strong> · WhatsApp: <strong>+54 9 342 463-8046</strong> · DevTech Argentina
+  </div>
+
+</body>
+</html>
