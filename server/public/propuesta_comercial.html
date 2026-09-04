@@ -163,6 +163,27 @@
       text-align: center;
       white-space: nowrap;
     }
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #25D366;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 13px;
+      text-decoration: none;
+      padding: 10px 22px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+      transition: background 0.2s, transform 0.1s;
+    }
+    .whatsapp-btn:hover {
+      background: #1ebc59;
+      transform: translateY(-1px);
+    }
     .footer-note {
       margin-top: 14px;
       text-align: center;
@@ -172,6 +193,12 @@
     }
     @media print {
       body { padding: 0; }
+      .whatsapp-btn {
+        box-shadow: none;
+        border: 1px solid #16a34a;
+        background: #f0fdf4;
+        color: #15803d;
+      }
     }
   </style>
 </head>
@@ -239,6 +266,18 @@
     <div class="offer-badge">
       100% Bonificado<br><small style="font-weight: 500; text-transform: none;">por 14 días</small>
     </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 16px;">
+    <a href="https://wa.me/543424638046?text=Hola%20Juan,%20le%C3%AD%20la%20propuesta%20de%20Storefy%20y%20quiero%20activar%20la%20prueba%20piloto%20de%2014%20d%C3%ADas%20en%20mi%20comercio." 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="whatsapp-btn">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
+        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.963C16.588 1.981 14.115.96 11.482.96c-5.44 0-9.866 4.372-9.87 9.802 0 1.968.516 3.89 1.5 5.614l-.985 3.59 3.693-.972zm12.307-5.597c-.33-.165-1.951-.963-2.253-1.073-.303-.11-.523-.165-.743.165-.22.33-.852 1.073-1.045 1.293-.193.22-.385.247-.715.083-.33-.165-1.393-.513-2.653-1.637-.98-.874-1.64-1.953-1.832-2.282-.193-.33-.02-.508.145-.671.148-.147.33-.385.495-.578.165-.192.22-.33.33-.55.11-.22.055-.413-.028-.578-.083-.165-.743-1.79-1.018-2.45-.269-.65-.563-.56-.743-.57-.193-.01-.413-.012-.633-.012s-.578.083-.88.413c-.303.33-1.156 1.129-1.156 2.752 0 1.623 1.184 3.19 1.349 3.41.165.22 2.33 3.559 5.645 4.992.788.341 1.405.545 1.884.697.791.251 1.512.215 2.081.129.635-.096 1.951-.798 2.226-1.57.275-.772.275-1.432.193-1.57-.083-.138-.303-.22-.633-.385z"/>
+      </svg>
+      <span>Contactar por WhatsApp (+54 9 342 463-8046)</span>
+    </a>
   </div>
 
   <div class="footer-note">
